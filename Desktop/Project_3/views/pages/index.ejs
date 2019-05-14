@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="/assets /css/css/materialize.css" media="screen,projection" />
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <nav role="navigation">
+        <div class="nav-wrapper container" id="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col 6">
+                        <!-- <form action="/find-artist"> -->
+                            <input type="text" name="zip" placeholder="enter zipcode"
+                                id="zipper"><button id="enter">Submit</button>
+                            <!-- </form> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="/js/materialize.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="/js/liri.js"></script>
+        <script src="/js/bundle.js"></script>
+    <script type="text/javascript">
+      require("dotenv").config();
+var fs = require('fs');
+var request = require('request');
+var axios = require('axios')
+var moment = require('moment');
+
+
+
+$('#enter').on('click',function(){
+    event.preventDeault();
+    var zip =$('#zipper').val().trim();
+
+    $.ajax({
+        url:`https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+        method:"GET"
+    }).then(function(response){
+        console.log(zip)
+        console.log(response)
+    },
+    function(x,error){
+        console.log(error)
+  });
+});
+
+    </script>
+</body>
+
+</html>
