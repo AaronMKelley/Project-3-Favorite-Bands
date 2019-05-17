@@ -6,7 +6,8 @@ var app = express();
 var methodOverride = require('method-override')
 var bodyParser = require('body-parser');
 var session = require("express-session");
-var cookieParser = require("cookie-parser")
+var cookieParser = require("cookie-parser");
+const axios = require('axios');
 
 
 app.use(cookieParser());
@@ -28,6 +29,8 @@ var connection = mysql.createConnection({
 
 admin_status = "false";
 
+let zip = 94607;
+
 connection.connect(function () {
 	console.log(connection.threadId)
 })
@@ -36,25 +39,43 @@ app.get('/', function (req, res) {
 	res.render('pages/index')
 })
 
-function seatGeek(){
+function showFinder(zip){
+	let venues = [];
 
-axios({
-	method:'GET',
-	url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-	responseType:'JSON'
-})
-.then(function(response){
-	for (var i=0;i<response.length;i++){
-		console.log(response.data)
-	}
-})
-.catch(function (error) {
-	console.log(error);
-})}
+	axios({
+		method:'GET',
+		url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+		responseType:'JSON'
+	})
+	.then(function(response){
+		venues = response.data.venues;
+
+		for (var i = 0; i < venues.length; i++){
+			console.log(venues[i].name);
+			var venueId = venues[i].id;
+
+			axios({
+				method:'GET',
+				url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+				responseType: 'JSON'
+			})
+			.then(function(response){
+				console.log(response.data.events);
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+		}
+	})
+	.catch(function (error) {
+		console.log(error);
+	})
+
+}
 
 
 
-
+showFinder(zip);
 app.listen(3000, function () {
 	console.log("listening on 3000");
 })
