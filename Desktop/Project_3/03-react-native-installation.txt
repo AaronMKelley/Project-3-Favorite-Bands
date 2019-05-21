@@ -1,0 +1,78 @@
+installation
+
+	npm install -g expo-cli
+
+		error I got
+
+			gyp ERR! stack Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/expo-cli/node_modules/fsevents/build'
+
+
+
+	expo init AwesomeProject
+
+	cd AwesomeProject
+	npm start # you can also use: expo start
+
+	vms
+
+		Running your app on a simulator or virtual device
+		Expo CLI makes it really easy to run your React Native app on a physical device without setting up a development environment. If you want to run your app on the iOS Simulator or an Android Virtual Device, please refer to the instructions for building projects with native code to learn how to install Xcode or set up your Android development environment.
+
+		Once you've set these up, you can launch your app on an Android Virtual Device by running 
+
+			npm run android
+
+			, or on the iOS Simulator by running 
+
+				npm run ios 
+
+					(macOS only).
+
+					told me to do this
+						sudo xcode-select -s /Applications/Xcode.app
+
+							it seemingly worked
+
+					error I got running it after the sudo xcode-select command above
+
+						Error running `xcrun simctl boot 5111F7FB-2609-4AE4-9B92-382B7C5EEFE1`: An error was encountered processing the command (domain=com.apple.CoreSimulator.SimError, code=164):
+
+							solution
+								@fson I managed to fix this issue. Once the simulator is up to Hardware then click on Erase all Content and Settings.... Close the simulator and relaunch it, this will cause the latest expo to be installed in the simulator. I hope this helps :)
+
+					error I got after doing the above solution
+
+						it keeps rebuilding the javascript bundle and then it keeps hot refreshing the ios simulator 
+
+						solution
+	
+							I did nothing and waited and then it stopped
+
+
+
+To use the inspector tool on your mobile app:
+
+	Using Expo:
+	- Shake Phone
+	- Select the debugging option
+	- a page should pop up on your browser…
+	- then command ‘i’ .. just like we do when working we web apps.. this will bring up the inspector tool
+	- then you can properly use console.log in your react-native app.
+
+	Using Simulator:
+	- Just do the same thing as above but instead of shaking your phone(because you’re using simulator..) just type press command ‘d’
+
+To use webtokens in React Native …
+	import {AsyncStorage} from ‘react-native’;
+	then just put AsyncStorage where you’d normally put localStorage
+
+app not updating
+	Priscila [3:30 PM]
+	Hi @Austin T. Are you using expo? Recently I'm having problems. I make changes and it doesn't show the updates. It shows a really old version
+
+	Austin T. [3:58 PM]
+	@Priscila I stopped using expo. I’ve been using Xcode’s mobile app simulator since it no longer overheats my computer.
+
+	For the issue you’re experiencing.. We’ve experienced the same issue before. We would make changes and it might take a while for the updates to take place.. we could even see the code had not updated because it gave us the same error.
+
+	To deal with this problem.. i would just restart the app, restart the build(exiting in terminal and doing expo start again), and make sure my changes were saved in the correct file. (edited)

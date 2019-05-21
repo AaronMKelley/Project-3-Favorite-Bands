@@ -31,3 +31,10 @@
     transform: rotate(360deg);
   }
 }
+
+
+button{
+  width:100px;
+  color: pink;
+  background-color: black
+}
