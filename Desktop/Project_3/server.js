@@ -70,7 +70,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-	connection.query('SELECT email FROM users LIMIT 1', function (error,result) {
+	connection.query('SELECT email FROM users WHERE email= ? LIMIT 1', function (error, result) {
 		if (!result) return res.status(404).json({ error: 'user not found' });
 
 		if (!bcrypt.compareSync(req.body.password_hash, result.password_hash)) return res.status(401).json({ error: 'incorrect password' });
@@ -85,10 +85,10 @@ app.post('/login', function (req, res) {
 		return res.json({
 			message: 'successfully authenticated',
 			token: token,
-		})
+		});
 
-	})
-})
+	});
+});
 
 
 
@@ -96,34 +96,34 @@ app.post('/login', function (req, res) {
 
 
 app.post('/signup', function (req, res) {
-	connection.query("SELECT email FROM users LIMIT 1", 
-	function (error,result) {
-		if (result) return res.status(406).json({ error: 'user already exists' });
+	connection.query("SELECT email FROM users LIMIT 1",
+		function (error, result) {
+			// if (result) return res.status(406).json({ error: 'user already exists' });
 
-		if (!req.body.password_hash) return res.status(401).json({ error: 'you need a password' });
+			if (!req.body.password_hash) return res.status(401).json({ error: 'you need a password' });
 
-		if (req.body.password_hash.legnth <= 5) return res.status(401).json({ error: 'password length must be greater than five.' });
+			if (req.body.password_hash.legnth <= 5) return res.status(401).json({ error: 'password length must be greater than five.' });
 
-		console.log('got to line')
+			console.log('got to line')
 
-		bcrypt.genSalt(10, function (err, salt) {
-			bcrypt.hash(req.body.password_hash, salt, function (err, hash) {
-				connection.query("INSERT INTO users (email,password_hash,profile_photo,spotify_playlist_link) VALUES (?,?,?,?)", [req.body.email, hash, req.body.profile_picture, req.body.spotify_playlist_link],
-					function (error, results) {
-						console.log('got to line')
+			bcrypt.genSalt(10, function (err, salt) {
+				bcrypt.hash(req.body.password_hash, salt, function (err, hash) {
+					connection.query("INSERT INTO users (email,password_hash,profile_photo,spotify_playlist_link) VALUES (?,?,?,?)", [req.body.email, hash, req.body.profile_picture, req.body.spotify_playlist_link],
+						function (error, results) {
+							console.log('got to line')
 
-						if (error) {
-							res.send(error);
-						} else {
-							res.json({
-								message: "sucessfully signed up",
-								sign_up:false,
-							});
-						}
-					})
+							if (error) {
+								res.send(error);
+							} else {
+								res.json({
+									message: "sucessfully signed up",
+									sign_up: false,
+								});
+							}
+						})
+				})
 			})
 		})
-	})
 })
 
 
@@ -136,43 +136,43 @@ app.post('/signup', function (req, res) {
 
 
 // 	// API call to get data from SeatGeek. 
+let zip = 94102
+function showFinder(zip) {
+	let venues = [];
 
-	function showFinder(zip) {
-		let venues = [];
-		
-		axios({
-			method: 'GET',
-			url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-			responseType: 'JSON'
-		})
-			.then(function (response) {
-				venues = response.data.venues;
+	axios({
+		method: 'GET',
+		url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+		responseType: 'JSON'
+	})
+		.then(function (response) {
+			venues = response.data.venues;
 
-				for (var i = 0; i < venues.length; i++) {
-					console.log(venues[i].name);
-					var venueId = venues[i].id;
+			for (var i = 0; i < venues.length; i++) {
+				console.log(venues[i].name);
+				var venueId = venues[i].id;
 
-					axios({
-						method: 'GET',
-						url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-						responseType: 'JSON'
+				axios({
+					method: 'GET',
+					url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+					responseType: 'JSON'
+				})
+					.then(function (response) {
+						console.log(response.data.events);
 					})
-						.then(function (response) {
-							console.log(response.data.events);
-						})
-						.catch(function (error) {
-							console.log(error);
-						})
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			})
+					.catch(function (error) {
+						console.log(error);
+					})
+			}
+		})
+		.catch(function (error) {
+			console.log(error);
+		})
 
-	}
+}
 
 // showFinder(zip);
 
-	app.listen(PORT, function () {
-		console.log('🌎 ==> Now listening on PORT %s! Visit http://localhost:%s in your browser!', PORT, PORT);
-	});
+app.listen(PORT, function () {
+	console.log('🌎 ==> Now listening on PORT %s! Visit http://localhost:%s in your browser!', PORT, PORT);
+});
