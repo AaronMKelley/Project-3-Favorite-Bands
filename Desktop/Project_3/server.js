@@ -2,21 +2,23 @@
 var mysql = require("mysql");
 var express = require("express");
 var bcrypt = require("bcryptjs");
+var logger = require("morgan");
 var app = express();
 var methodOverride = require('method-override')
 var bodyParser = require('body-parser');
-var session = require("express-session");
-var cookieParser = require("cookie-parser");
+
 const axios = require('axios');
+var jwt = require('jsonwebtoken');
 
 
-app.use(cookieParser());
+var PORT = process.env.PORT || 3001
+
+
 app.use(methodOverride('_method'))
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({ secret: "app", cookie: { maxAge: 1 * 1000 * 60 * 60 * 24 * 365 }, resave: true,
-saveUninitialized: true }));
+
 app.set('view engine', 'ejs');
 
 var connection = mysql.createConnection({
@@ -24,58 +26,152 @@ var connection = mysql.createConnection({
 	port: 3306,
 	user: "root",
 	password: "password",
-	database: "conventions_db"
+	database: "company_db"
 });
 
-admin_status = "false";
-
-let zip = 94607;
 
 connection.connect(function () {
 	console.log(connection.threadId)
 })
 
+require('dotenv').config()
+
+
+app.use(function (req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+	next();
+});
+
+
+function verifyToken(req, res, next) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		jwt.verify(token.process.env.JWT_Secret, (err, decod) => {
+			if (err) {
+				res.status(403).json({
+					message: "wrong token"
+				})
+			} else {
+				req.deconded = decod;
+				next();  // a react function 
+			}
+		})
+	} else {
+		res.status(403).josn({
+			message: "No Token"
+		});
+	}
+}
+
 app.get('/', function (req, res) {
-	res.render('pages/index')
+	res.send('routes available: login : post -> /login, signup : post -> /signup, get all the venues: get -> /venues, get one venue: get -> /venue/:id, deleting a artist: post -> /artist/:id, adding a artist: post -> /artist');
+});
+
+app.post('/login', function (req, res) {
+	connection.query('SELECT email FROM users LIMIT 1', function (error,result) {
+		if (!result) return res.status(404).json({ error: 'user not found' });
+
+		if (!bcrypt.compareSync(req.body.password_hash, result.password_hash)) return res.status(401).json({ error: 'incorrect password' });
+
+		var payload = {
+			_id: result._id,
+			email: result_email,
+		};
+
+		var token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '6h' });
+
+		return res.json({
+			message: 'successfully authenticated',
+			token: token,
+		})
+
+	})
 })
 
-function showFinder(zip){
-	let venues = [];
 
-	axios({
-		method:'GET',
-		url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-		responseType:'JSON'
-	})
-	.then(function(response){
-		venues = response.data.venues;
 
-		for (var i = 0; i < venues.length; i++){
-			console.log(venues[i].name);
-			var venueId = venues[i].id;
 
-			axios({
-				method:'GET',
-				url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-				responseType: 'JSON'
+
+
+app.post('/signUp,', function (req, res) {
+	connection.query("SELECT email FROM users", function (error,result) {
+		
+		if (result) return res.status(406).json({ error: 'user already exists' });
+
+		if (!req.body.password_hash) return res.status(401).json({ error: 'you need a password' });
+
+		if (req.body.password_hash.legnth <= 5) return res.status(401).json({ error: 'password length must be greater than five.' });
+
+		console.log('got to line')
+
+		bcrypt.genSalt(10, function (err, salt) {
+			bcrypt.hash(req.body.password_hash, salt, function (err, hash) {
+				connection.query("INSERT INTO users (email,password_hash,profile_photo,spotify_playlist_link) VALUES (?,?,?,?)", [req.body.user_email, req.body.password_hash, req.body.user_profile_picture, req.body.user_spotify_playlist_link],
+					function (error, user) {
+						console.log('got to line')
+
+						if (error) {
+							res.send(error);
+						} else {
+							res.json({
+								message: "sucessfully signed up"
+							});
+						}
+					})
 			})
-			.then(function(response){
-				console.log(response.data.events);
+		})
+	})
+})
+
+
+
+
+
+
+
+
+
+
+// 	// API call to get data from SeatGeek. 
+
+	function showFinder(zip) {
+		let venues = [];
+		
+		axios({
+			method: 'GET',
+			url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+			responseType: 'JSON'
+		})
+			.then(function (response) {
+				venues = response.data.venues;
+
+				for (var i = 0; i < venues.length; i++) {
+					console.log(venues[i].name);
+					var venueId = venues[i].id;
+
+					axios({
+						method: 'GET',
+						url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+						responseType: 'JSON'
+					})
+						.then(function (response) {
+							console.log(response.data.events);
+						})
+						.catch(function (error) {
+							console.log(error);
+						})
+				}
 			})
 			.catch(function (error) {
 				console.log(error);
 			})
-		}
-	})
-	.catch(function (error) {
-		console.log(error);
-	})
 
-}
+	}
 
+// showFinder(zip);
 
-
-showFinder(zip);
-app.listen(3000, function () {
-	console.log("listening on 3000");
-})
+	app.listen(PORT, function () {
+		console.log('🌎 ==> Now listening on PORT %s! Visit http://localhost:%s in your browser!', PORT, PORT);
+	});
