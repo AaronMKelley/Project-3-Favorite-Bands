@@ -39,21 +39,24 @@ class App extends Component {
   signInLink = (event)=>{
    this.setState({sign_in:true})
   }
+
+
     signUp = (event) => {
     event.preventDefault();
-    this.setState({log_out:true})
+    // this.setState({log_out:true})
   
     let inputs =event.target.children;
   
     let email=inputs[0].value;
     let password_hash= inputs[2].value;
     let password_confim=inputs[4].value;
-    let picture= inputs[6].value;
-    let spotify=inputs[8].value;
+    let profile_picture= inputs[6].value;
+    let spotify_playlist_link=inputs[8].value;
+    console.log(email, password_hash,profile_picture,spotify_playlist_link)
   
     if (password_hash===password_confim){
   
-    return _signUp(email,password_hash,picture,spotify).then(res =>{
+    return _signUp(email, password_hash,profile_picture,spotify_playlist_link).then(res =>{
         console.log(res);
         alert(res.message)
       });
