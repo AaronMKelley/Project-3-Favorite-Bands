@@ -95,9 +95,9 @@ app.post('/login', function (req, res) {
 
 
 
-app.post('/signUp,', function (req, res) {
-	connection.query("SELECT email FROM users", function (error,result) {
-		
+app.post('/signup', function (req, res) {
+	connection.query("SELECT email FROM users LIMIT 1", 
+	function (error,result) {
 		if (result) return res.status(406).json({ error: 'user already exists' });
 
 		if (!req.body.password_hash) return res.status(401).json({ error: 'you need a password' });
@@ -108,15 +108,16 @@ app.post('/signUp,', function (req, res) {
 
 		bcrypt.genSalt(10, function (err, salt) {
 			bcrypt.hash(req.body.password_hash, salt, function (err, hash) {
-				connection.query("INSERT INTO users (email,password_hash,profile_photo,spotify_playlist_link) VALUES (?,?,?,?)", [req.body.user_email, req.body.password_hash, req.body.user_profile_picture, req.body.user_spotify_playlist_link],
-					function (error, user) {
+				connection.query("INSERT INTO users (email,password_hash,profile_photo,spotify_playlist_link) VALUES (?,?,?,?)", [req.body.email, hash, req.body.profile_picture, req.body.spotify_playlist_link],
+					function (error, results) {
 						console.log('got to line')
 
 						if (error) {
 							res.send(error);
 						} else {
 							res.json({
-								message: "sucessfully signed up"
+								message: "sucessfully signed up",
+								sign_up:false,
 							});
 						}
 					})
