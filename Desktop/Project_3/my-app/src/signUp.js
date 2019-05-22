@@ -8,6 +8,7 @@ import './materialize.css'
 class SignUpForm extends Component{
     render(){
         return(
+            <div class="container">
     <form id={this.props.signupId} onSubmit={this.props.func} >
     <input type="text" name='email' placeholder='enter email' />
     <p></p>
@@ -24,6 +25,7 @@ class SignUpForm extends Component{
     <button > {this.props.submitButton} </button>
     <p></p>
     </form>
+    </div>
         )
     }
 }

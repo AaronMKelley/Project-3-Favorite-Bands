@@ -85,6 +85,7 @@ app.post('/login', function (req, res) {
 		return res.json({
 			message: 'successfully authenticated',
 			token: token,
+			sign_in: true, 
 		});
 
 	});
@@ -96,10 +97,13 @@ app.post('/login', function (req, res) {
 
 
 app.post('/signup', function (req, res) {
-	connection.query("SELECT email FROM users LIMIT 1",
+	connection.query("SELECT email FROM users WHERE email = ? LIMIT 1", [req.body.email],
 		function (error, result) {
-			// if (result) return res.status(406).json({ error: 'user already exists' });
+			console.log(result)
+			if (result.length>0) return res.status(406).json({ error: 'user already exists' });
+console.log(req.body)
 
+console.log(error)
 			if (!req.body.password_hash) return res.status(401).json({ error: 'you need a password' });
 
 			if (req.body.password_hash.legnth <= 5) return res.status(401).json({ error: 'password length must be greater than five.' });

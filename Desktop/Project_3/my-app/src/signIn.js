@@ -12,7 +12,7 @@ class LoginForm extends Component {
                 <p></p>
                 <input type="text" name='password' placeholder='please enter a password ' />
                 <p></p>
-                <button>{this.props.submitButton} Submit </button>
+                <button>{this.props.submitButton} </button>
                 <p></p>
             </form>
 

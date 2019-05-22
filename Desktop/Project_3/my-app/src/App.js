@@ -161,7 +161,7 @@ class App extends Component {
     if (this.state.sign_up == true) {
       form = <h1>Sign Up Page <SignUpForm signUpId="editForm" func={this.signUp} submitButton="sign up" /></h1>
     } else if (this.state.sign_in == true) {
-      form = <h1>Sign In<LoginForm signinId="editForm" funct={this.login} submitButton="Login weee" /></h1>
+      form = <h1>Sign In<LoginForm signinId="editForm" funct={this.login} submitButton="Login" /></h1>
     }
 
     return (
