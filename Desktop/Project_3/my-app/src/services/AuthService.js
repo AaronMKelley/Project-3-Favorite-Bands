@@ -19,3 +19,18 @@ export const _login = (email, password_hash) => {
 	    body: JSON.stringify({email, password_hash})
 	  }).then(res => res.json())
 }
+
+
+// PUT IN AXIOS CALL IN HERE. 
+
+export const _zip = ({zip}) => {
+	return fetch(`https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,{
+		method: 'GET',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type':'application/json'
+		},
+		body: JSON.stringify({zip})
+	}).then(res => res.json()
+	)
+}

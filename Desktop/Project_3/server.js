@@ -70,14 +70,17 @@ app.get('/', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-	connection.query('SELECT email FROM users WHERE email= ? LIMIT 1', function (error, result) {
+	connection.query('SELECT id, email, password_hash FROM users WHERE email= ? LIMIT 1',[req.body.email],
+	 function (error, result) {
+		 console.log(error)
+		 console.log(result)
 		if (!result) return res.status(404).json({ error: 'user not found' });
 
-		if (!bcrypt.compareSync(req.body.password_hash, result.password_hash)) return res.status(401).json({ error: 'incorrect password' });
+		if (!bcrypt.compareSync(req.body.password_hash, result[0].password_hash)) return res.status(401).json({ error: 'incorrect password' });
 
 		var payload = {
-			_id: result._id,
-			email: result_email,
+			_id: result[0].id,
+			email: result[0].email,
 		};
 
 		var token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '6h' });
@@ -140,8 +143,9 @@ console.log(error)
 
 
 // 	// API call to get data from SeatGeek. 
-let zip = 94102
+
 function showFinder(zip) {
+	
 	let venues = [];
 
 	axios({
@@ -175,7 +179,7 @@ function showFinder(zip) {
 
 }
 
-// showFinder(zip);
+showFinder(zip);
 
 app.listen(PORT, function () {
 	console.log('🌎 ==> Now listening on PORT %s! Visit http://localhost:%s in your browser!', PORT, PORT);
