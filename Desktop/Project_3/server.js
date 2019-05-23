@@ -144,9 +144,11 @@ console.log(error)
 
 // 	// API call to get data from SeatGeek. 
 
-function showFinder(zip) {
-	
+// function showFinder(zip) {
+
+
 	let venues = [];
+// app.post('/zip',function(req,res){
 
 	axios({
 		method: 'GET',
@@ -154,30 +156,33 @@ function showFinder(zip) {
 		responseType: 'JSON'
 	})
 		.then(function (response) {
+			console.log(response.data)
 			venues = response.data.venues;
 
-			for (var i = 0; i < venues.length; i++) {
-				console.log(venues[i].name);
-				var venueId = venues[i].id;
+			// for (var i = 0; i < venues.length; i++) {
+			// 	console.log(venues[i].name);
+			// 	var venueId = venues[i].id;
 
-				axios({
-					method: 'GET',
-					url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-					responseType: 'JSON'
-				})
-					.then(function (response) {
-						console.log(response.data.events);
-					})
-					.catch(function (error) {
-						console.log(error);
-					})
-			}
+			// 	axios({
+			// 		method: 'GET',
+			// 		url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
+			// 		responseType: 'JSON'
+			// 	})
+			// 		.then(function (response) {
+			// 			console.log(response.data.events);
+			// 		})
+			// 		.catch(function (error) {
+			// 			console.log(error);
+			// 		})
+			// }
 		})
 		.catch(function (error) {
 			console.log(error);
 		})
 
-}
+// })
+	
+// }
 
 showFinder(zip);
 

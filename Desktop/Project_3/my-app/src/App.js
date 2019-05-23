@@ -3,7 +3,7 @@ import './App.css';
 import SignUpForm from '../../my-app/src/signUp';
 import LoginForm from '../../my-app/src/signIn';
 import './materialize.css'
-import { _signUp, _login, _zip } from './services/AuthService.js';
+import { _signUp, _login, _zipCode } from './services/AuthService.js';
 import { throwStatement } from '@babel/types';
 
 const axios = require('axios');
@@ -109,9 +109,12 @@ class App extends Component {
     let inputs= event.target.children;
     let zip = inputs[0].value;
     
-  this.setState({zip_code:zip},function (){
-    localStorage.removeItem("this")
+    return _zipCode(zip).then(res => {
+      this.setState({zip_code:zip},function (){
+        localStorage.removeItem("this")
+        })
     })
+  
   
 
 
@@ -167,7 +170,7 @@ class App extends Component {
 
 
 
-
+  }
   // }
   render() {
 
