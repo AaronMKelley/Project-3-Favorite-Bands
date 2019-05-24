@@ -22,6 +22,7 @@ class App extends Component {
       logged_in: false,
       zip_code: [],
       zip_form: true,
+      title:[],
     };
 
 
@@ -112,9 +113,9 @@ class App extends Component {
     let zip = inputs[0].value;
 
     return _zipCode(zip).then(res => {
-      this.setState({ zip_code: zip }, function () {
-        localStorage.removeItem("this")
-      })
+      console.log(res)
+      this.setState({title:res }) 
+      
     })
 
 
@@ -157,6 +158,9 @@ class App extends Component {
 
           <Zip zipId="editForm" func={this.zipFinder} submitButton="Find Venues" />
 
+{this.state.title.map(function(t){
+  return (<p>{t}</p>)
+})}
         </body>
 
 

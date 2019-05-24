@@ -66,3 +66,8 @@ form {
   font-size: 20px !important;
   color:black;
 }
+
+#artist{
+  width:150px;
+  height:75px !important;
+}

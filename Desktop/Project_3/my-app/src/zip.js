@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 // import React from 'react';
 import './App.js'
 import './materialize.css'
+import './App.css'
 
 class Zip extends Component {
     render() {
@@ -12,7 +13,7 @@ class Zip extends Component {
                     <div className='col s4'>
                         <form id={this.props.zipID} onSubmit={this.props.func}
                         ><input name="zip" type="text" placeholder='enter your zip code'>
-                            </input> <button >Find Venue</button>
+                            </input> <button id="artist" >Find Upcoming Artist</button>
 
 
                         </form>
