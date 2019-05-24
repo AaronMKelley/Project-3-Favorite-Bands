@@ -15,7 +15,7 @@ code {
 button{
   width: 100px !important;
   height:50px !important;
-  margin-bottom:250px !important;
+  /* margin-bottom:50px !important; */
 }
 
 form {

@@ -4,6 +4,7 @@ import SignUpForm from '../../my-app/src/signUp';
 import LoginForm from '../../my-app/src/signIn';
 import './materialize.css'
 import { _signUp, _login, _zipCode } from './services/AuthService.js';
+import Zip from '../../my-app/src/zip'
 import { throwStatement } from '@babel/types';
 
 const axios = require('axios');
@@ -20,6 +21,8 @@ class App extends Component {
       sign_up: false,
       logged_in: false,
       zip_code: [],
+      zip_form: true,
+      title:[],
     };
 
 
@@ -34,11 +37,11 @@ class App extends Component {
 
 
   signUpLink = (event) => {
-    this.setState({ sign_up: true });
+    this.setState({ sign_up: true, zip_form: false });
   }
 
   signInLink = (event) => {
-    this.setState({ sign_in: true })
+    this.setState({ sign_in: true, zip_form: false })
   }
 
 
@@ -78,20 +81,20 @@ class App extends Component {
 
     console.log(email, password_hash)
 
-  
-      return _login(email, password_hash).then(res => {
-        if (res.token) {
-          alert(res.message)
-          this.setState({ sign_in: true }, function () {
-            localStorage.setItem('token', res.token);
 
-          })
+    return _login(email, password_hash).then(res => {
+      if (res.token) {
+        alert(res.message)
+        this.setState({ sign_in: true }, function () {
+          localStorage.setItem('token', res.token);
 
-        } else {
-          alert('you were not logged in')
-        }
-      })
-    
+        })
+
+      } else {
+        alert('you were not logged in')
+      }
+    })
+
   }
 
   // start at logout 
@@ -106,75 +109,23 @@ class App extends Component {
   zipFinder = (event) => {
     event.preventDefault();
 
-    let inputs= event.target.children;
+    let inputs = event.target.children;
     let zip = inputs[0].value;
-    
+
     return _zipCode(zip).then(res => {
-      this.setState({zip_code:zip},function (){
-        localStorage.removeItem("this")
-        })
+      console.log(res)
+      this.setState({title:res }) 
+      
     })
-  
-  
-
-
-
-
-
-// PUT THIS IN FETCH
-  // zipFinder = (event) => {
-  //   // event.preventDeafult();
-
-  //   let venues = []
-  //   let inputs = event.target.children
-  //   let zip = inputs[0].value
-
-  //   return axios({
-  //     method: 'GET',
-  //     url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-  //     responseType: 'JSON'
-  //   })
-  //     .then(function (response) {
-  //       venues = response.data.venues;
-
-  //       for (var i = 0; i < venues.length; i++) {
-  //         console.log(venues[i].name);
-  //         var venueId = venues[i].id;
-  //         axios({
-  //           method: 'GET',
-  //           url: `https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
-  //           responseType: 'JSON'
-  //         })
-  //           .then(function (response) {
-  //             // console.log(response.data.events);
-  //           })
-  //           .catch(function (error) {
-  //             alert('this works')
-  //             console.log(error);
-  //           })
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-
-
-  //       let venues = this.state.venues.map(prevVenues => {
-  //         this.setState({ venues })
-  //       })
-
-  //     })
-
-
-
-
 
 
 
   }
-  // }
   render() {
 
     let form = " "
+
+
 
     if (this.state.sign_up == true) {
       form = <h1>Sign Up Page <SignUpForm signUpId="editForm" func={this.signUp} submitButton="sign up" /></h1>
@@ -182,34 +133,42 @@ class App extends Component {
       form = <h1>Sign In<LoginForm signinId="editForm" funct={this.login} submitButton="Login" /></h1>
     }
 
+    let zip_zip = " "
+
+
+
     return (
       <div className="App">
 
         <header className="App-header">
-          {/* <nav class="company_color" role="navigation"> */}
           <div class='container'>
-          <div class='row'>
-          <div class='col s8'></div>
-          <div class='col s2'><button onClick={() => this.signUpLink()}>Make An Account</button></div>
-          <div class='col s2'><button onClick={() => this.signInLink()}>Sign In</button></div>
-           
+            <div className='row'>
+              <div className='col s8'></div>
+              <div className='col s2'><button onClick={() => this.signUpLink()}>Make An Account</button></div>
+              <div className='col s2'><button onClick={() => this.signInLink()}>Sign In</button></div>
+
               {this.state.sign_up ? " " : " "} <br />
               {this.state.sign_in ? "" : ""} <br />
-              {form}
+
             </div>
-            </div>
-            {/* </nav> */}
-        
-      
-          <form id="zipId" onSubmit={this.zipFinder}
-          ><input name="zip" type="text" placeholder='enter your zip code'>
-            </input> <button >Submit 2</button>
+          </div>
+        </header>
+        <body>
+          {form}
+
+          <Zip zipId="editForm" func={this.zipFinder} submitButton="Find Venues" />
+
+{this.state.title.map(function(t){
+  return (<p>{t}</p>)
+})}
+        </body>
 
 
-
-          </form>
-          </header>
-
+        <footer>
+          <div>
+            Home
+  </div>
+        </footer>
       </div>
     );
   }
