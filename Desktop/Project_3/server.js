@@ -149,8 +149,9 @@ console.log(error)
 
 	let venues = [];
 // app.post('/zip',function(req,res){
-
+	let zip=94102
 	axios({
+	
 		method: 'GET',
 		url: `https://api.seatgeek.com/2/venues?postal_code=${zip}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,
 		responseType: 'JSON'
@@ -184,7 +185,7 @@ console.log(error)
 	
 // }
 
-showFinder(zip);
+// showFinder(zip);
 
 app.listen(PORT, function () {
 	console.log('🌎 ==> Now listening on PORT %s! Visit http://localhost:%s in your browser!', PORT, PORT);

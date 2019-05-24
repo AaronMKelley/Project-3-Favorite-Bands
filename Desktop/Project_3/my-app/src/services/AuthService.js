@@ -35,11 +35,37 @@ export const _zipCode = (zip) => {
 		},
 		
 	//  body: JSON.stringify({zip})
-	}).then(function(response){
-		console.log(response)
-		console.log(response)
-		
 	})
+	.then(r => r.json())
+	.then(function(response){
+		console.log(response.venues)
+		
+		let venues = response.venues
+	
+		for (let i=0;i<venues.length;i++){
+			console.log(venues[i].name);
+			var venueId = venues[i].id;
+		}
+		
+		return fetch(`https://api.seatgeek.com/2/events?taxonomies.name=concert&venue.id=${venueId}&client_id=MTY2Mjc3MDV8MTU1NzgwMjk5MC41OA`,{
+			method: 'GET',
+		})
+	})
+		.then(r =>r.json())
+		.then(function(response){
+		console.log(response.events)
+	let events = response.events
+ 
+	for (let j=0;j<events.length;j++){
+		console.log(events[j].title)
+	
+		let title =events[j].title
+
+	}
+	
+		})
+
+
 	.catch(function (error){
 		console.log(error)
 	})
@@ -48,7 +74,8 @@ export const _zipCode = (zip) => {
 
 
 
-// export const _zip = ({zip}) => {
+// export const _zipCode = ({zip}) => {
+// 	console.log(zip)
 // 	return fetch("http://localhost:3001/zip",{
 // 		method: 'POST',
 // 		headers: {
@@ -56,6 +83,12 @@ export const _zipCode = (zip) => {
 // 			'Content-Type':'application/json'
 // 		},
 // 		body: JSON.stringify({zip})
-// 	}).then(res => res.json()
-// 	)
+// 	}).then(function(response){
+// 		console.log(response)
+// 		console.log(response)
+		
+// 	})
+// 	.catch(function (error){
+// 		console.log(error)
+// 	})
 // }
