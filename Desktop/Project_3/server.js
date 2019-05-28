@@ -124,8 +124,9 @@ console.log(error)
 							} else {
 								res.json({
 									message: "sucessfully signed up",
-									sign_up: false,
-								});
+									
+									});
+								
 							}
 						})
 				})

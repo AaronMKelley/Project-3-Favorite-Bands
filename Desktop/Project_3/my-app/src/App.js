@@ -153,7 +153,7 @@ class App extends Component {
             </div>
           </div>
         </header>
-        <body>
+    {/* <div className="app_body"> */}
           {form}
 
           <Zip zipId="editForm" func={this.zipFinder} submitButton="Find Venues" />
@@ -161,14 +161,14 @@ class App extends Component {
 {this.state.title.map(function(t){
   return (<p>{t}</p>)
 })}
-        </body>
+      
 
-
-        <footer>
-          <div>
+      {/* </div> */}
+        {/* <footer> */}
+          {/* <div> */}
             Home
-  </div>
-        </footer>
+  {/* </div> */}
+        {/* </footer> */}
       </div>
     );
   }
