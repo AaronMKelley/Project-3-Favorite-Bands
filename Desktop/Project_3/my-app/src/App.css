@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-image: url(wood_bqckground.jpg);
+ 
 }
 
 .App-logo {
@@ -53,7 +55,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color:rgb(175, 18, 18);
+  background-image:url(CurtainRed.jpg)
 }
 
 code {
@@ -70,4 +72,8 @@ form {
 #artist{
   width:150px;
   height:75px !important;
+}
+
+.app_body{
+  background-color: blue;
 }
