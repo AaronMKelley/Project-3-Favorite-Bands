@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 
 const axios = require('axios');
 var jwt = require('jsonwebtoken');
+var path = require('path')
 
 
 var PORT = process.env.PORT || 3001
@@ -37,11 +38,31 @@ connection.connect(function () {
 require('dotenv').config()
 
 
+// app.use(function (req, res, next) {
+// 	res.header("Access-Control-Allow-Origin", "*");
+// 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+// 	res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+// 	next();
+// });
+
+// Add headers
 app.use(function (req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
-	next();
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
 });
 
 
@@ -64,10 +85,6 @@ function verifyToken(req, res, next) {
 		});
 	}
 }
-
-app.get('/', function (req, res) {
-	res.send('routes available: login : post -> /login, signup : post -> /signup, get all the venues: get -> /venues, get one venue: get -> /venue/:id, deleting a artist: post -> /artist/:id, adding a artist: post -> /artist');
-});
 
 app.post('/login', function (req, res) {
 	connection.query('SELECT id, email, password_hash FROM users WHERE email= ? LIMIT 1',[req.body.email],
@@ -95,6 +112,21 @@ app.post('/login', function (req, res) {
 });
 
 
+app.get('/uri/:artist', function(req, res){
+	axios({
+		method: 'GET',
+		url: `https://api.spotify.com/v1/search?q=${req.params.artist}&type=artist&limit=1`,
+		headers: {
+			"Authorization": "Bearer BQCD0JbZ18bj20VeOT30EbzUz3sIMDBuMD11whMJFllONtb0N2TJAkGGKE87JT1B7NVFWMYHaXvsuVrs25qgXY3xIBYKRKweLFzfC9jAI0_tv8mqFizxZ41uvbX6L6_4rjlO_77ht897TUUg3A"
+		},
+		responseType: 'JSON'
+    })
+    .then(function (response) {
+        let uri = response.data.artists.items[0].uri.slice(15);
+        console.log(uri);
+        res.json({uri : uri})
+    })
+});
 
 
 
@@ -187,6 +219,10 @@ console.log(error)
 // }
 
 // showFinder(zip);
+
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, './my-app/public/index.html'));
+  });
 
 app.listen(PORT, function () {
 	console.log('🌎 ==> Now listening on PORT %s! Visit http://localhost:%s in your browser!', PORT, PORT);
