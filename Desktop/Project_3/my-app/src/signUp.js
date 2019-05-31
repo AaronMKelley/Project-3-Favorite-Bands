@@ -9,18 +9,18 @@ class SignUpForm extends Component{
     render(){
         return(
             <div class="container">
-    <form id={this.props.signupId} onSubmit={this.props.func} >
-    <input type="text" name='email' placeholder='enter email' />
+    <form className="artist" id={this.props.signupId} onSubmit={this.props.func} >
+    <input className="artist"  type="text" name='email' placeholder='enter email' />
     <p></p>
-    <input type="text" name='password' placeholder='please enter a password '/>
+    <input className="artist" type="text" name='password' placeholder='please enter a password '/>
     <p></p>
-    <input type="text" name="password" placeholder="confirm your password" />
+    <input className="artist"type="text" name="password" placeholder="confirm your password" />
     <p></p>
-    <input type="file"
+    <input className="artist" type="file"
        name='pic' 
        accept="image/png, image/jpeg" placeholder='upload photo'/>
        <p></p>
-    <input type='url' name='spotifyPlaylist' placeholder='enter your spotify playlist!'/>
+    <input className="artist" type='url' name='spotifyPlaylist' placeholder='enter your spotify playlist!'/>
     <p></p>
     <button > {this.props.submitButton} </button>
     <p></p>
