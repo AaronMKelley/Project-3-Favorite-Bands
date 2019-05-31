@@ -13,7 +13,7 @@ class Zip extends Component {
                     <div className='col s4'>
                         <form id={this.props.zipID} onSubmit={this.props.func}
                         ><input name="zip" type="text" placeholder='enter your zip code'>
-                            </input> <button id="artist" >Find Upcoming Artist</button>
+                            </input> <button id="artist" >Find Upcoming Artists</button>
 
 
                         </form>

@@ -3,10 +3,12 @@ import './App.css';
 import SignUpForm from '../../my-app/src/signUp';
 import LoginForm from '../../my-app/src/signIn';
 import './materialize.css'
-import { _signUp, _login, _zipCode } from './services/AuthService.js';
+import { _signUp, _login} from './services/AuthService.js';
 import Zip from '../../my-app/src/zip'
 import { throwStatement } from '@babel/types';
-// import { triggerAsyncId } from 'async_hooks';
+import { _artists } from './services/ArtistFinder.js';
+import { _uri } from './services/uriFinder.js';
+
 
 const axios = require('axios');
 
@@ -23,21 +25,27 @@ class App extends Component {
       logged_in: false,
       zip_code: [],
       zip_form: true,
-      title: [],
+     
       intial: true,
       signed_up: false,
       welcome_page: true,
+      artists:[],
+      uri: null,
+      loading: true
+
     };
 
 
   }
-
+  
   getToken = () => {
     return localStorage.getItem('token');
   }
 
   //Need to add componentDidMount()
+  componentDidMount(){
 
+  }
 
 
   signUpLink = (event) => {
@@ -112,21 +120,35 @@ class App extends Component {
     })
   }
 
-  zipFinder = (event) => {
+  artistFinder = (event) => {
     event.preventDefault();
 
     let inputs = event.target.children;
     let zip = inputs[0].value;
 
-    return _zipCode(zip).then(res => {
-      console.log(res)
-      this.setState({ title: res })
+
+    
+
+
+    return _artists(zip).then(res => { 
+      debugger;
+      this.setState({artists:res }, function() {
+        _uri(this.state.artists[0]).then(res => {
+          console.log(res);
+          this.setState({uri: `https://open.spotify.com/embed/artist/${res.uri}`}, () => {
+            this.setState({loading : false})
+          });
+          this.setState({loading : false})
+
+        })
+      } )
 
     })
-
-
-
   }
+
+
+
+
   render() {
 
     let welcome= " "
@@ -213,6 +235,15 @@ class App extends Component {
           )
         })}
 
+
+          <Zip zipId="editForm" func={this.artistFinder} submitButton="Find Venues" />
+          {!this.state.loading && <iframe src={this.state.uri} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" />}
+
+
+{this.state.artists.map(function(t){
+  return (<p key={t.id}>{t}</p>)
+})}
+      
 
 
       </div>
