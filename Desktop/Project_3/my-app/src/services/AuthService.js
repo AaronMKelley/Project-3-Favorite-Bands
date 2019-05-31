@@ -23,7 +23,7 @@ export const _login = (email, password_hash) => {
 }
 
 
-// PUT IN AXIOS CALL IN HERE. 
+
 
 export const _zipCode = (zip) => {
 	console.log(zip)
@@ -35,7 +35,7 @@ export const _zipCode = (zip) => {
 			// 'Content-Type': 'application/json'
 		},
 
-		//  body: JSON.stringify({zip})
+	
 	})
 		.then(r => r.json())
 		.then(function (response) {
@@ -74,22 +74,3 @@ export const _zipCode = (zip) => {
 
 
 
-
-// export const _zipCode = ({zip}) => {
-// 	console.log(zip)
-// 	return fetch("http://localhost:3001/zip",{
-// 		method: 'POST',
-// 		headers: {
-// 			'Accept': 'application/json',
-// 			'Content-Type':'application/json'
-// 		},
-// 		body: JSON.stringify({zip})
-// 	}).then(function(response){
-// 		console.log(response)
-// 		console.log(response)
-
-// 	})
-// 	.catch(function (error){
-// 		console.log(error)
-// 	})
-// }
