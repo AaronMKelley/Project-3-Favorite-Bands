@@ -3,7 +3,7 @@ import './App.css';
 import SignUpForm from '../../my-app/src/signUp';
 import LoginForm from '../../my-app/src/signIn';
 import './materialize.css'
-import { _signUp, _login} from './services/AuthService.js';
+import { _signUp, _login } from './services/AuthService.js';
 import Zip from '../../my-app/src/zip'
 import { throwStatement } from '@babel/types';
 import { _artists } from './services/ArtistFinder.js';
@@ -25,11 +25,11 @@ class App extends Component {
       logged_in: false,
       zip_code: [],
       zip_form: true,
-     
+
       intial: true,
       signed_up: false,
       welcome_page: true,
-      artists:[],
+      artists: [],
       uri: null,
       loading: true
 
@@ -37,23 +37,23 @@ class App extends Component {
 
 
   }
-  
+
   getToken = () => {
     return localStorage.getItem('token');
   }
 
   //Need to add componentDidMount()
-  componentDidMount(){
+  componentDidMount() {
 
   }
 
 
   signUpLink = (event) => {
-    this.setState({ sign_up: true, zip_form: false,welcome_page:false });
+    this.setState({ sign_up: true, zip_form: false, welcome_page: false });
   }
 
   signInLink = (event) => {
-    this.setState({ sign_in: true, sign_up:false, zip_form: false, welcome_page:false})
+    this.setState({ sign_in: true, sign_up: false, zip_form: false, welcome_page: false })
   }
 
 
@@ -113,10 +113,10 @@ class App extends Component {
 
 
   logout = (event) => {
-    this.setState({ logged_in: false , intial:true, welcome_page:true}, function () {
+    this.setState({ logged_in: false, intial: true, welcome_page: true }, function () {
       localStorage.removeItem('token')
       alert('You have successfully logged out')
-      
+
     })
   }
 
@@ -127,21 +127,21 @@ class App extends Component {
     let zip = inputs[0].value;
 
 
-    
 
 
-    return _artists(zip).then(res => { 
+
+    return _artists(zip).then(res => {
       debugger;
-      this.setState({artists:res }, function() {
+      this.setState({ artists: res }, function () {
         _uri(this.state.artists[0]).then(res => {
           console.log(res);
-          this.setState({uri: `https://open.spotify.com/embed/artist/${res.uri}`}, () => {
-            this.setState({loading : false})
+          this.setState({ uri: `https://open.spotify.com/embed/artist/${res.uri}` }, () => {
+            this.setState({ loading: false })
           });
-          this.setState({loading : false})
+          this.setState({ loading: false })
 
         })
-      } )
+      })
 
     })
   }
@@ -151,14 +151,14 @@ class App extends Component {
 
   render() {
 
-    let welcome= " "
-    if (this.state.welcome_page==true){
-      welcome= 
-      <div className='container'>
-      <div className='row'>
-      <h1 className='artist'>Find Concerts. Listen Now.</h1>
-      <h3 className='artist'>Finding Local Artists and Concerts is Just a Few Clicks Away. Create an Account Today to Get Started</h3>
-      </div>
+    let welcome = " "
+    if (this.state.welcome_page == true) {
+      welcome =
+        <div className='container'>
+          <div className='row'>
+            <h1 className='artist'>Find Concerts. Listen Now.</h1>
+            <h3 className='artist'>Finding Local Artists and Concerts is Just a Few Clicks Away. Create an Account Today to Get Started</h3>
+          </div>
         </div>
     }
 
@@ -211,10 +211,10 @@ class App extends Component {
 
         </div>
       </div>
-      zip_zip = <h2 className='artist'>Local Concert Search<Zip zipId="editForm" func={this.zipFinder} submitButton="Find Venues" /></h2>
+      zip_zip = <h2 className='artist'>Local Concert Search<Zip zipId="editForm" func={this.artistFinder} submitButton="Find Venues" /></h2>
     }
 
-
+let artist_list= this.state.artist
     return (
       <div className="App">
 
@@ -230,20 +230,43 @@ class App extends Component {
         {form}
         {zip_zip}
 
-        {this.state.title.map(function (t) {
-          return (<ul><li className='artist_list'>{t}</li></ul>
+
+
+        {/* {this.state.artists.map(function (t) {
+          for (var i=0;i<t.length;i++){
+          return (<nav><ul><li className='artist_list'>{t}</li></ul></nav>
           )
-        })}
+          }
+        })} */}
 
 
-          <Zip zipId="editForm" func={this.artistFinder} submitButton="Find Venues" />
-          {!this.state.loading && <iframe src={this.state.uri} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" />}
+
+        <div className='container'>
+          <div className='row'>
+            <div className='col s1'></div>
+            <div className='col s5'>
+              {!this.state.loading && <iframe src={this.state.uri} width="350" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" />}
+            </div>
+            <div className='col s4'>  {this.state.artists.map(function (t) {
+            
+          for (var i=0; i<t.length;i++){
+            return (<div class="vertical-menu" ><ul><li><button id='artist_list' onClick={() => alert('cheese!')} key={t.id}>{t}</button></li></ul></div>)
+          }  
+            })}
+            </div>
+            <div className='col s2'></div>
+          </div>
+        </div>
+        {/* } */}
+
+          {/* <Zip zipId="editForm" func={this.artistFinder} submitButton="Find Venues" /> */}
+        {/* {!this.state.loading && <iframe src={this.state.uri} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" />} */}
 
 
-{this.state.artists.map(function(t){
-  return (<p key={t.id}>{t}</p>)
-})}
-      
+        {/* {this.state.artists.map(function (t) {
+          return (<a id='artist_list' key={t.id}>{t[i]}</a>)
+        })} } */}
+           
 
 
       </div>
