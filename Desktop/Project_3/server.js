@@ -117,7 +117,7 @@ app.get('/uri/:artist', function(req, res){
 		method: 'GET',
 		url: `https://api.spotify.com/v1/search?q=${req.params.artist}&type=artist&limit=1`,
 		headers: {
-			"Authorization": "Bearer BQCD0JbZ18bj20VeOT30EbzUz3sIMDBuMD11whMJFllONtb0N2TJAkGGKE87JT1B7NVFWMYHaXvsuVrs25qgXY3xIBYKRKweLFzfC9jAI0_tv8mqFizxZ41uvbX6L6_4rjlO_77ht897TUUg3A"
+			"Authorization": "Bearer BQDQDllSdXy75_--2NwKVqUGHDn7VJxN41qBnD_NP4XT4Pd0u_HN7iOOHd5UnsYO_MOjUdP1GwReDYnzCxdO4PZFRch0sO8nQ4uljKiu7A0n-sNYZNIYSn_Lu6IP1EyoVEPx8piur8qcxZ2qcg"
 		},
 		responseType: 'JSON'
     })

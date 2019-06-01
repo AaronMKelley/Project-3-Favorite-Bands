@@ -48,7 +48,7 @@ footer{
 }
 
 body {
-  height:900px;
+  height:100%;
   text-align: center;
   font-family:'Kanit', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -90,8 +90,38 @@ footer{
 }
 
 
-.artist_list{
-  color:white;
+#artist_list{
+  color:black;
   font-size: 20px;
   font-family: 'Kanit', sans-serif;
+}
+
+/* nav ul{height:200px; width:25% !important;}
+nav ul{overflow-y:scroll !important} */
+
+.vertical-menu {
+  width: 200px; /* Set a width if you like */
+  /* height: 100px; */
+}
+
+.vertical-menu a {
+  /* background-color: #eee; Grey background color */
+  display: block; /* Make the links appear below each other */
+  padding: 12px; /* Add some padding */
+  text-decoration: none; /* Remove underline from links */
+}
+
+.vertical-menu a:hover {
+  background-color: dark gray !important; /* Dark grey background on mouse-over */
+}
+
+.vertical-menu a.active {
+  background-color: maroon !important; /* Add a green color to the "active/current" link */
+  color: white;
+}
+
+button{
+  width:150px !important;
+  background-image: url(CurtainRed.jpg);
+  color: white !important;
 }
