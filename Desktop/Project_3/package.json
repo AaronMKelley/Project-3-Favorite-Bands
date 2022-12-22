@@ -19,7 +19,7 @@
     "express": "4.16.4",
     "express-session": "1.16.1",
     "fs": "0.0.1-security",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "method": "2.0.0",
     "method-override": "3.0.0",
     "moment": "^2.24.0",
